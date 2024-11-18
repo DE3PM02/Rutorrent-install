@@ -4,9 +4,6 @@ import shutil
 import subprocess
 
 # Variables
-tunnel_type = "Ngrok"  # Options: "Ngrok", "Argo Tunnel"
-ngrok_authtoken = "2gynWmWAm7MTaVOHPzAo1eTCbbb_4CtFK6bpGQp6HLwn87Rjm"
-tunnel_port = 80
 RUTorrent_Mobile = True  # Enable ruTorrent Mobile
 
 # Directories
@@ -55,13 +52,42 @@ os.system(f'sudo mv {apache_conf_path} /etc/apache2/sites-available/rutorrent.co
 os.system('sudo a2ensite rutorrent')
 os.system('sudo systemctl restart apache2')
 
-# Tunnel setup
-if tunnel_type == "Ngrok":
-    print("Starting Ngrok Tunnel...")
-    os.system(f'ngrok authtoken {ngrok_authtoken}')
-    os.system(f'ngrok http {tunnel_port}')
-elif tunnel_type == "Argo Tunnel":
-    print("Starting Argo Tunnel...")
-    os.system(f'cloudflared tunnel --url http://localhost:{tunnel_port}')
 
-print("ruTorrent is ready. Access it via the tunnel URL.")
+import os
+import shutil
+import json
+import time
+
+def start_ngrok_http(tunnel_port, ngrok_authtoken):
+    # Check if ngrok is installed
+    if not shutil.which('ngrok'):
+        os.system('wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz -P /tmp')
+        os.system('tar -xvzf /tmp/ngrok-v3-stable-linux-amd64.tgz -C /tmp')
+        os.system('sudo mv /tmp/ngrok /usr/local/bin/')
+        os.remove('/tmp/ngrok-v3-stable-linux-amd64.tgz')
+        
+    # Set ngrok authtoken
+    os.system(f'ngrok config add-authtoken "{ngrok_authtoken}"')
+
+    # Start ngrok tunnel
+    os.system(f'ngrok http {tunnel_port} &')
+    time.sleep(2)  # Wait for ngrok to initialize
+    
+    # Get the public URL
+    try:
+        tunnel_url = os.popen('curl -s http://localhost:4040/api/tunnels').read()
+        url_data = json.loads(tunnel_url)
+        public_url = url_data['tunnels'][0]['public_url']
+        return public_url
+    except (IndexError, KeyError, json.JSONDecodeError):
+        raise Exception("Failed to retrieve the Ngrok public URL. Ensure Ngrok is running properly.")
+
+# Example Usage
+if __name__ == "__main__":
+    port = 80
+    authtoken = "2gynWmWAm7MTaVOHPzAo1eTCbbb_4CtFK6bpGQp6HLwn87Rjm"
+    try:
+        ngrok_url = start_ngrok_http(port, authtoken)
+        print(f"Ngrok public URL: {ngrok_url}")
+    except Exception as e:
+        print(f"Error: {e}")
