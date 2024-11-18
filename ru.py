@@ -1,6 +1,8 @@
 
 import os
 import shutil
+import json
+import time
 import subprocess
 
 # Variables
@@ -51,12 +53,6 @@ os.system(f'curl -L https://raw.githubusercontent.com/Monster013/25-63369/refs/h
 os.system(f'sudo mv {apache_conf_path} /etc/apache2/sites-available/rutorrent.conf')
 os.system('sudo a2ensite rutorrent')
 os.system('sudo systemctl restart apache2')
-
-
-import os
-import shutil
-import json
-import time
 
 def start_ngrok_http(tunnel_port, ngrok_authtoken):
     # Check if ngrok is installed
