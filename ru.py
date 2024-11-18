@@ -29,7 +29,7 @@ os.system('pip install cloudscraper')
 
 # Download and configure rTorrent
 rtorrent_rc_path = os.path.expanduser("~/.rtorrent.rc")
-os.system(f'wget "https://github.com/Monster013/25-63369/raw/refs/heads/main/rtorrent.rc" -O "{rtorrent_rc_path}"')
+os.system(f'wget "https://raw.githubusercontent.com/DE3PM02/Rutorrent-install/refs/heads/master/rtorrent.rc" -O "{rtorrent_rc_path}"')
 
 # Start rTorrent in a detached screen session
 subprocess.Popen(['screen', '-d', '-m', '-fa', '-S', 'rtorrent', 'rtorrent'])
