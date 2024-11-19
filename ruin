@@ -6,7 +6,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Install required packages
 echo "Installing required packages..."
-sudo apt install -y apache2 php php-cli php-curl php-xml php-json php-mbstring php-intl curl unzip git libapache2-mod-scgi rtorrent
+sudo apt install -y apache2 php php-cli php-curl php-xml php-json php-mbstring php-intl curl unzip git libapache2-mod-scgi mediainfo ffmpeg rtorrent
 
 # Configure rTorrent
 echo "Configuring rTorrent..."
