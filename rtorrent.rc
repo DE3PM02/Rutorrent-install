@@ -1,7 +1,7 @@
 
 # rTorrent Config
-directory = /mnt/c/Users/Administrator/Downloads
-session = /mnt/c/Users/Administrator/rTorrent/session
+directory = ~/Downloads
+session = ~/.session
 port_range = 40000-50000
 port_random = yes
 dht.mode.set = auto
